@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import useWebsocket, { ReadyState } from "react-use-websocket";
-import BanAccount from "./components/BanAccount";
+import Feed from "./components/Feed";
 import AccountInput from "./components/inputs/AccountInput";
 import BlocktypesInput from "./components/inputs/BlocktypesInput";
 import FilterInput from "./components/inputs/FilterInput";
@@ -24,7 +24,7 @@ function Index() {
   useEffect(() => {
     lastJsonMessage !== null &&
       lastJsonMessage.block_account &&
-      setMessages((prev) => [lastJsonMessage, ...prev.slice(undefined, 19)]);
+      setMessages((prev) => [lastJsonMessage, ...prev.slice(undefined, 999)]);
   }, [lastJsonMessage]);
 
   const getFormatedState = (state: FormState) => ({
@@ -47,7 +47,10 @@ function Index() {
       <div className="md:flex md:items-center md:justify-between">
         <div className="min-w-0 flex-1">
           <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-            Banws Demo Application
+            <a href="https://github.com/eulentier161/banws" target="_blank">
+              Banws
+            </a>{" "}
+            Demo Application
           </h1>
           <span className="font-light">
             Websocket Status: {connectionStatus}
@@ -70,35 +73,7 @@ function Index() {
           <br />
           {lastMessage?.data.startsWith("{") ? null : lastMessage?.data}
           <br />
-          live feed:
-          <table className="font-mono">
-            <thead hidden>
-              <tr>
-                <th>Block Account</th>
-                <th>Action</th>
-                <th>Link as Account</th>
-              </tr>
-            </thead>
-            <tbody>
-              {messages.map((m) => (
-                <tr key={m.hash}>
-                  <td>
-                    <BanAccount wsAccount={m.block_account} />
-                  </td>
-                  <td>
-                    <a href={`https://creeper.banano.cc/hash/${m.hash}`}>
-                      {m.block.subtype}{" "}
-                      {parseFloat(m.amount_decimal).toLocaleString()} BAN
-                    </a>
-                  </td>
-                  <td>
-                    <BanAccount wsAccount={m.link_as_account} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <br />
+          <Feed messages={messages} />
         </div>
       </main>
     </div>

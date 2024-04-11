@@ -5,7 +5,7 @@ export type WebsocketAccount = {
   alias: string | null;
 };
 
-type Block = {
+export type Block = {
   type: "state";
   account: string;
   previous: string;
@@ -24,6 +24,7 @@ export type WebsocketResponse = {
   link_as_account: WebsocketAccount;
   amount_decimal: string;
   hash: string;
+  time: string;
   block: Block;
 };
 

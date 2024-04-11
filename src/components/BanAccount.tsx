@@ -1,19 +1,17 @@
-import { WebsocketAccount } from "../types";
 import { shortAccount } from "../utils";
 
 export default function BanAccount({
-  wsAccount,
+  account,
+  alias,
+  discord_name,
 }: {
-  wsAccount: WebsocketAccount;
+  account: string;
+  alias?: string | null;
+  discord_name?: string | null;
 }) {
   return (
-    <a
-      title={wsAccount.account}
-      href={`https://creeper.banano.cc/account/${wsAccount.account}`}
-    >
-      {wsAccount.discord_name ??
-        wsAccount.alias ??
-        shortAccount(wsAccount.account)}
+    <a title={account} href={`https://creeper.banano.cc/account/${account}`} target="_blank">
+      {discord_name ?? alias ?? shortAccount(account)}
     </a>
   );
 }
