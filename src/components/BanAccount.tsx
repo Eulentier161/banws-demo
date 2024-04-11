@@ -6,17 +6,14 @@ export default function BanAccount({
 }: {
   wsAccount: WebsocketAccount;
 }) {
-  
   return (
     <a
       title={wsAccount.account}
       href={`https://creeper.banano.cc/account/${wsAccount.account}`}
     >
-      <code>
-        {wsAccount.discord_name ??
-          wsAccount.alias ??
-          shortAccount(wsAccount.account)}
-      </code>
+      {wsAccount.discord_name ??
+        wsAccount.alias ??
+        shortAccount(wsAccount.account)}
     </a>
   );
 }

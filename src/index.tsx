@@ -1,16 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import useWebsocket, { ReadyState } from "react-use-websocket";
 import BanAccount from "./components/BanAccount";
+import AccountInput from "./components/inputs/AccountInput";
+import BlocktypesInput from "./components/inputs/BlocktypesInput";
+import FilterInput from "./components/inputs/FilterInput";
+import JsonPreview from "./components/JsonPreview";
 import { FormContext } from "./context/FormContext";
 import type { FormState, FormStateContext, WebsocketResponse } from "./types";
-import Button from "./components/Button";
-import { shortAccount } from "./utils";
 
 function Index() {
   const { sendJsonMessage, lastMessage, lastJsonMessage, readyState } =
     useWebsocket<WebsocketResponse>("wss://ws.spyglass.eule.wtf");
-  const { formState, toggleBlocktype, addAccount, removeAccount, setFilter } =
-    useContext(FormContext) as FormStateContext;
+  const { formState } = useContext(FormContext) as FormStateContext;
   const connectionStatus = {
     [ReadyState.CONNECTING]: "Connecting",
     [ReadyState.OPEN]: "Open",
@@ -18,7 +19,6 @@ function Index() {
     [ReadyState.CLOSED]: "Closed",
     [ReadyState.UNINSTANTIATED]: "Uninstantiated",
   }[readyState];
-  const [currentAccount, setCurrentAccount] = useState<string>("");
   const [messages, setMessages] = useState<WebsocketResponse[]>([]);
 
   useEffect(() => {
@@ -43,126 +43,65 @@ function Index() {
   );
 
   return (
-    <main className="container mx-auto mt-8">
-      <h1 className="font-bold text-2xl">Banws Demo Application</h1>
-      <span>Websocket Connection Status: {connectionStatus}</span>
+    <div className="container mx-auto mt-8">
+      <div className="md:flex md:items-center md:justify-between">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+            Banws Demo Application
+          </h1>
+          <span className="font-light">
+            Websocket Status: {connectionStatus}
+          </span>
+        </div>
+      </div>
       <hr />
-
-      <form className="grid grid-cols-1 lg:grid-cols-3 gap-4 my-4">
-        <label>
-          filter
-          <br />
-          <select
-            onChange={(e) => setFilter(e.target.value as "all" | "discord")}
-            value={formState.filter}
-          >
-            <option>all</option>
-            <option>discord</option>
-          </select>
-        </label>
-
-        <div>
-          blocktypes
-          <br />
-          <label>
-            send
-            <input
-              checked={formState.blocktypes.send}
-              onChange={() => toggleBlocktype("send")}
-              type="checkbox"
-            />
-          </label>
-          <br />
-          <label>
-            receive
-            <input
-              checked={formState.blocktypes.receive}
-              onChange={() => toggleBlocktype("receive")}
-              type="checkbox"
-            />
-          </label>
-          <br />
-          <label>
-            change
-            <input
-              checked={formState.blocktypes.change}
-              onChange={() => toggleBlocktype("change")}
-              type="checkbox"
-            />
-          </label>
+      <main>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-32 xl:gap-64 my-4">
+          <FilterInput />
+          <BlocktypesInput />
+          <AccountInput />
         </div>
 
         <div>
-          <label>
-            accounts
-            <br />
-            <input
-              value={currentAccount}
-              className="mr-2"
-              onChange={(e) => {
-                setCurrentAccount(e.currentTarget.value);
-              }}
-              type="text"
-            />
-            <Button
-              onClick={() => {
-                addAccount(currentAccount);
-                setCurrentAccount("");
-              }}
-            >
-              +
-            </Button>
-          </label>
-          <ol>
-            {formState.accounts.map((account) => (
-              <li key={account}>
-                <span className="mr-2">{shortAccount(account)}</span>
-                <Button onClick={() => removeAccount(account)}>-</Button>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </form>
-
-      <div>
-        options:
-        <pre>{JSON.stringify(getFormatedState(formState), undefined, 2)}</pre>
-        <br />
-        {lastMessage?.data.startsWith("{") ? null : lastMessage?.data}
-        <br />
-        live feed:
-        <table>
-          <thead hidden>
-            <tr>
-              <th>Block Account</th>
-              <th>Action</th>
-              <th>Link as Account</th>
-            </tr>
-          </thead>
-          <tbody>
-            {messages.map((m) => (
+          <span className="block text-sm font-medium leading-6 text-gray-900">
+            Websocket Filter:
+          </span>
+          <JsonPreview blob={getFormatedState(formState)} />
+          <br />
+          {lastMessage?.data.startsWith("{") ? null : lastMessage?.data}
+          <br />
+          live feed:
+          <table className="font-mono">
+            <thead hidden>
               <tr>
-                <td>
-                  <BanAccount wsAccount={m.block_account} />
-                </td>
-                <td>
-                  <code>
+                <th>Block Account</th>
+                <th>Action</th>
+                <th>Link as Account</th>
+              </tr>
+            </thead>
+            <tbody>
+              {messages.map((m) => (
+                <tr key={m.hash}>
+                  <td>
+                    <BanAccount wsAccount={m.block_account} />
+                  </td>
+                  <td>
                     <a href={`https://creeper.banano.cc/hash/${m.hash}`}>
                       {m.block.subtype}{" "}
                       {parseFloat(m.amount_decimal).toLocaleString()} BAN
                     </a>
-                  </code>
-                </td>
-                <td>
-                  <BanAccount wsAccount={m.link_as_account} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <br />
-      </div>
-    </main>
+                  </td>
+                  <td>
+                    <BanAccount wsAccount={m.link_as_account} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <br />
+        </div>
+      </main>
+    </div>
   );
 }
 
