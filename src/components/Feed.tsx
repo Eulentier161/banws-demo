@@ -139,7 +139,7 @@ export default function Feed({ messages }: { messages: WebsocketResponse[] }) {
           <span>
             A live feed based on your filter settings will appear here after
             atleast one transactions happened on the blockchain! Check the
-            <a
+            {" "}<a
               href="https://github.com/Eulentier161/banws/blob/main/README.md"
               target="_blank"
             >
