@@ -44,38 +44,40 @@ function Index() {
 
   return (
     <div className="container mx-auto mt-8">
-      <div className="md:flex md:items-center md:justify-between">
-        <div className="min-w-0 flex-1">
-          <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-            <a href="https://github.com/eulentier161/banws" target="_blank">
-              Banws
-            </a>{" "}
-            Demo Application
-          </h1>
-          <span className="font-light">
-            Websocket Status: {connectionStatus}
-          </span>
+      <div className="mx-2">
+        <div className="md:flex md:items-center md:justify-between">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+              <a href="https://github.com/eulentier161/banws" target="_blank">
+                Banws
+              </a>{" "}
+              Demo Application
+            </h1>
+            <span className="font-light">
+              Websocket Status: {connectionStatus}
+            </span>
+          </div>
         </div>
-      </div>
-      <hr />
-      <main>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-32 xl:gap-64 my-4">
-          <FilterInput />
-          <BlocktypesInput />
-          <AccountInput />
-        </div>
+        <hr />
+        <main>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-32 xl:gap-64 my-4">
+            <FilterInput />
+            <BlocktypesInput />
+            <AccountInput />
+          </div>
 
-        <div>
-          <span className="block text-sm font-medium leading-6 text-gray-900">
-            Websocket Filter:
-          </span>
-          <JsonPreview blob={getFormatedState(formState)} />
-          <br />
-          {lastMessage?.data.startsWith("{") ? null : lastMessage?.data}
-          <br />
-          <Feed messages={messages} />
-        </div>
-      </main>
+          <div>
+            <span className="block text-sm font-medium leading-6 text-gray-900">
+              Websocket Filter:
+            </span>
+            <JsonPreview blob={getFormatedState(formState)} />
+            <br />
+            {lastMessage?.data.startsWith("{") ? null : lastMessage?.data}
+            <br />
+            <Feed messages={messages} />
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

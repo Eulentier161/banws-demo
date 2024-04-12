@@ -46,7 +46,7 @@ export default function AccountInput() {
           type="text"
           id="account"
           className={clsx(
-            "block font-mono w-full rounded-md border-0 py-1.5 pr-10 ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
+            "block font-mono w-full rounded-md border-0 py-1.5 truncate ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
             !isValid &&
               currentAccount.length &&
               "text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500",
